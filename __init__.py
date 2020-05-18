@@ -63,8 +63,12 @@ class PythonAgeSkill(CommonQuerySkill):
         # If this is an age query and a monty python member is mentioned the
         # skill can answer this
         if age_query and python:
+            if 'monty python' in utt.lower():
+                confidence = CQSMatchLevel.EXACT
+            else:
+                confidence = CQSMatchLevel.CATEGORY
             # return high confidence
-            return (utt, CQSMatchLevel.CATEGORY, self.format_answer(python))
+            return (utt, confidence, self.format_answer(python))
         else:
             return None
 

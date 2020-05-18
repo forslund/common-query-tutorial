@@ -117,10 +117,27 @@ If both criterias aren't fulfilled the method will return None indicating that i
 
 This will be able to provide answers to queries such as
 
-`how old is Eric Idle`
+`how old is Graham Chapman`
 
 "what's Eric Idle's age
 
 To make this more exact we can add support for checking for the words "monty python", and if present return the highest confidence
 
 The method for parsing the example is quite simplistic but there are many different toolkits out there for doing the question parsing. [Adapt](https://pypi.org/project/adapt-parser/), [little questions](https://pypi.org/project/little-questions/), [padaos](https://pypi.org/project/padaos/) and may more!
+
+
+## Better matching
+If we want to make sure this skill is used if the user explicitly states it's the age of a Monty Python member, a slight modification to the skill can be made:
+
+We'll change the end of the `CQS_match_query_phrase()` method to
+
+```python
+            if 'monty python' in utt.lower():
+                confidence = CQSMatchLevel.EXACT
+            else:
+                confidence = CQSMatchLevel.CATEGORY
+            # return high confidence
+            return (utt, confidence, self.format_answer(python))
+```
+
+So if the utterance contains the phrase "monty python" the confidence will be set to `CQSMatchLevel.EXACT` making the skill very very likely to be chosen to answer the query.
