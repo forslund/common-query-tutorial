@@ -40,7 +40,7 @@ CQSMatchLevel is an Enum with the possible values
 
 ## An Example
 
-Let's make a simple skill that tells us the age of the various Monty Python members. A quick draft looks like this
+Let's make a simple skill that tells us the age of the various Monty Python members. A quick draft looks like this. (You can find the complete code [here](https://github.com/forslund/common-query-tutorial))
 
 
 ```python
