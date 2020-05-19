@@ -67,10 +67,18 @@ class PythonAgeSkill(CommonQuerySkill):
                 confidence = CQSMatchLevel.EXACT
             else:
                 confidence = CQSMatchLevel.CATEGORY
-            # return high confidence
-            return (utt, confidence, self.format_answer(python))
+            data = {'age': PYTHONS[python][0], 'python': python}
+            return (utt, confidence, self.format_answer(python), data)
         else:
             return None
+
+    def CQS_action(self, phrase, data):
+        """Gloat and show the age on the Mark-1 Screen."""
+        self.log.info('I was selected! I am the best!')
+        age = data.get('age')
+        if age:
+            self.log.info('Showing {}'.format(age))
+            self.enclosure.mouth_text(str(age))
 
 
 def create_skill():
