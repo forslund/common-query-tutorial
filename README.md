@@ -141,3 +141,47 @@ We'll change the end of the `CQS_match_query_phrase()` method to
 ```
 
 So if the utterance contains the phrase "monty python" the confidence will be set to `CQSMatchLevel.EXACT` making the skill very very likely to be chosen to answer the query.
+
+
+## CQS_action()
+
+In some cases the skill should do additional operations when selected as the best match. It could be prepare for follow-up questions or show an image on the screen. The `CQS_action()` method allows for this, when a skill is selected this method will be called.
+
+The full signature is 
+
+```python
+    def CQS_action(self, utt, data):
+```
+
+where `phrase` is the same phrase that were sent to `CQS_match_query_phrase()` and `data` is optional additional data from the query matching method.
+
+### Example
+
+Let's make our python age skill gloat that it was selected by adding a `CQS_action()` method like this:
+
+```python
+    def CQS_action(self, utt, data):
+        self.log.info('I got selected! What you say about that Wolfram Alpha skill!?!?')
+```
+
+Now each time the skill is called the above message will be added to the log! No useful you say? Hmm, yes... let's add something useful, like show the age on the Mark-1 display.
+
+To accomplish this we need to get the age into the `CQS_action()` method in some way. we could store last age in as an internal variable but the more elegant way is to send data as part of the match tuple. To do this we must extend the returned match tuple from `CQS_match_query_phrase()` with a data entry. So the return statement becomes
+
+```python
+            data = {'age': PYTHONS[python], 'python': python}
+            return (utt, confidence, self.format_answer(python), data)
+```
+
+
+The data structure declared here will be sent to the `CQS_Action()`method and we can update the method to 
+
+
+```python
+    def CQS_action(self, utt, data):
+        self.log.info('I got selected! What you say about that Wolfram Alpha skill!?!?')
+        age = data.get('age')
+        if age:
+            self.log.info('Showing the age {}'.format(age))
+            self.enclosure.mouth_text(str(age))
+```
